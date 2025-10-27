@@ -35,7 +35,12 @@ logger.addHandler(stream_handler)
 logger.addHandler(connection_handler)
 logging.getLogger("pytgcalls").setLevel(logging.WARNING)
 
-aiosession = ClientSession()
+aiosession = None
+
+async def init_aiohttp_session():
+    global aiosession
+    if aiosession is None:
+        aiosession = ClientSession()
 
 class Bot(Client):
     def __init__(self, **kwargs):
