@@ -15,16 +15,29 @@ from PyroUbot import *
 @PY.PRIVATE
 async def _(client, message):
     user_id = message.from_user.id
-    buttons = BTN.START(message)
-    msg = MSG.START(message)
-    pantek = "https://files.catbox.moe/7ggxo2.jpg"
+    try:
+        buttons = BTN.START(message)
+        msg = MSG.START(message)
+        pantek = "https://files.catbox.moe/7ggxo2.jpg"
 
-    await bot.send_photo(
-        user_id, 
-        pantek, 
-        caption=msg, 
-        reply_markup=InlineKeyboardMarkup(buttons) if buttons else None
-    )
+        await bot.send_photo(
+            user_id,
+            pantek,
+            caption=msg,
+            reply_markup=InlineKeyboardMarkup(buttons) if buttons else None
+        )
+        print(f"START command sent to user {user_id}")
+    except Exception as e:
+        print(f"Error in START command: {e}")
+        # Fallback simple message
+        await bot.send_message(
+            user_id,
+            "PyroUbot Active!\n\n/start - Show menu\n/trial - Free trial\n/help - Help",
+            reply_markup=InlineKeyboardMarkup([
+                [InlineKeyboardButton("Trial Free", callback_data="trial_ubot")],
+                [InlineKeyboardButton("Help", callback_data="help_back")]
+            ])
+        )
 
 
 @PY.CALLBACK("bahan")
@@ -573,3 +586,9 @@ async def _(client, callback_query):
     # Set user state for trial
     await add_to_vars(client.me.id, "TRIAL_USERS", user_id)
     await set_vars(client.me.id, "TRIAL_STATE", f"waiting_phone_{user_id}")
+
+
+@PY.BOT("test")
+@PY.PRIVATE
+async def _(client, message):
+    await message.reply("Bot is working! /start should work too.")
