@@ -138,8 +138,7 @@ class BTN:
             button = [
                 [InlineKeyboardButton("⦪ ʙᴇʟɪ ᴜꜱᴇʀʙᴏᴛ ⦫", callback_data="bahan")],
                 [
-                    InlineKeyboardButton("⦪ ɢʀᴏᴜᴘ ᴘᴜʙʟɪᴄ ⳼", url="t.me/publikibnu"),
-                    InlineKeyboardButton("⦪ ᴄʜᴀɴɴᴇʟ ⦫", url="t.me/MizukiOgawaRR")
+                    InlineKeyboardButton("⦪ ɢʀᴏᴜᴘ ᴘᴜʙʟɪᴄ ⳼", url="https://t.me/pyroubot_grup")
                 ],
                 [
                     InlineKeyboardButton("⦪ ᴛʀɪᴀʟ ꜰʀᴇᴇ ⦫", callback_data="trial_ubot"),
@@ -147,7 +146,7 @@ class BTN:
                 ],
                 [
                     InlineKeyboardButton("⦪ ʜᴇʟᴘ ᴍᴇɴᴜ ⦫", callback_data="help_back"),
-                    InlineKeyboardButton("⦪ sᴜᴘᴘᴏʀᴛ ⦫", callback_data="support")
+                    InlineKeyboardButton("⦪ sᴜᴘᴘᴏʀᴛ ⦫", url="https://t.me/ibradecode")
                 ]
             ]
         else:
