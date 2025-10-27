@@ -42,3 +42,6 @@ pykeyboard
 httpx[http2]==0.27.2
 git+https://github.com/hakutakaid/pyrogram
 qrcode
+geopy
+speedtest-cli
+pytimeparse
