@@ -800,11 +800,344 @@ Pengguna bertanggung jawab penuh atas penggunaan bot ini.
 
 ### Support & Contact
 
-Jika ada pertanyaan atau masalah:
+Jika ada pertanyaan, masalah, atau ingin berdiskusi tentang PyroUbot:
 
-- Issues: [GitHub Issues](https://github.com/IbraDecode/PyroUbot/issues)
-- Discussions: [GitHub Discussions](https://github.com/IbraDecode/PyroUbot/discussions)
-- Email: ibradecode@gmail.com
+- **Telegram Group**: [PyroUbot Community](https://t.me/pyroubot_grup) - Tempat diskusi, support, dan update
+- **GitHub Issues**: [Report Bug](https://github.com/IbraDecode/PyroUbot/issues) - Laporkan bug atau request fitur
+- **GitHub Discussions**: [Q&A](https://github.com/IbraDecode/PyroUbot/discussions) - Tanya jawab dan diskusi
+- **Email**: ibradecode@gmail.com - Contact developer
+
+### Community Guidelines
+
+- Gunakan bahasa yang sopan dan respektif
+- Bantu sesama member jika memungkinkan
+- Laporkan bug dengan detail yang lengkap
+- Bagikan pengalaman dan tips menggunakan bot
+- Respect privacy dan jangan spam
+
+### Getting Help
+
+1. **Cek Dokumentasi**: Baca README.md terlebih dahulu
+2. **Search Existing Issues**: Cari masalah serupa yang sudah dilaporkan
+3. **Telegram Group**: Tanyakan di group untuk support cepat
+4. **GitHub Issues**: Buat issue baru jika belum ada solusi
+
+---
+
+## FAQ (Frequently Asked Questions)
+
+### General Questions
+
+**Q: Apa itu PyroUbot?**
+A: PyroUbot adalah bot Telegram multifungsi yang dapat mengelola userbot secara otomatis dengan berbagai fitur entertainment dan utility.
+
+**Q: Apakah PyroUbot gratis?**
+A: Ya, PyroUbot adalah open source dan gratis untuk digunakan. Namun Anda perlu biaya untuk hosting dan API keys tertentu.
+
+**Q: Berapa banyak userbot yang bisa dikelola?**
+A: Secara default maksimal 100 userbot per instance, namun dapat dikonfigurasi sesuai kebutuhan.
+
+**Q: Apakah PyroUbot aman digunakan?**
+A: Bot ini aman jika digunakan sesuai guidelines. Selalu gunakan credentials Anda sendiri dan jangan bagikan token ke orang lain.
+
+### Technical Questions
+
+**Q: Bot tidak merespons perintah saya**
+A: Pastikan bot sudah diaktifkan dan Anda memiliki akses. Cek status bot dengan `/ping` command.
+
+**Q: Error "MongoDB connection failed"**
+A: Periksa koneksi internet dan konfigurasi MONGO_URL. Gunakan MongoDB Atlas untuk hosting cloud.
+
+**Q: Userbot sering expired**
+A: Ini normal karena session Telegram memiliki batas waktu. Bot akan otomatis membersihkan userbot yang expired.
+
+**Q: Bagaimana cara backup data?**
+A: Bot memiliki fitur backup otomatis. Gunakan `/backup` command untuk manual backup.
+
+### Installation Questions
+
+**Q: VPS apa yang direkomendasikan?**
+A: Minimum 1GB RAM, 1 core CPU. Recommended: DigitalOcean, Vultr, atau Linode dengan Ubuntu 20.04+.
+
+**Q: Berapa biaya hosting per bulan?**
+A: $5-15 per bulan tergantung provider dan spesifikasi. Termasuk VPS + MongoDB Atlas.
+
+**Q: Bisakah dijalankan di Heroku?**
+A: Ya, namun Heroku memiliki batasan free tier. Gunakan paid dyno untuk 24/7 uptime.
+
+### Development Questions
+
+**Q: Bagaimana cara menambah fitur baru?**
+A: Buat file baru di folder `modules/` dan ikuti struktur yang ada. Lihat contoh di file lain.
+
+**Q: Bagaimana cara debugging?**
+A: Gunakan `python3 -m PyroUbot --debug` untuk verbose logging. Cek `logs.txt` untuk error details.
+
+**Q: Dimana dokumentasi API lengkap?**
+A: Lihat bagian "API Reference" di README ini. Juga cek Pyrogram documentation.
+
+---
+
+## Roadmap & Future Plans
+
+### Version 2.1.0 (Next Release)
+- [ ] AI Chatbot integration (GPT-4, Claude)
+- [ ] Advanced media processing
+- [ ] Multi-language support
+- [ ] Web dashboard interface
+- [ ] Plugin marketplace
+
+### Version 2.2.0 (Future)
+- [ ] Voice recognition features
+- [ ] Advanced automation workflows
+- [ ] Integration dengan external APIs
+- [ ] Mobile app companion
+- [ ] Advanced analytics dashboard
+
+### Long-term Vision
+- [ ] Cross-platform support (Discord, WhatsApp)
+- [ ] Enterprise features
+- [ ] White-label solutions
+- [ ] API marketplace
+- [ ] Decentralized architecture
+
+### Contributing to Roadmap
+Fitur apa yang ingin Anda lihat di PyroUbot? Berikan masukan di:
+- [GitHub Discussions](https://github.com/IbraDecode/PyroUbot/discussions)
+- [Telegram Group](https://t.me/pyroubot_grup)
+
+---
+
+## Performance & Optimization
+
+### System Requirements
+
+#### Minimum Requirements
+- CPU: 1 core @ 2.4GHz
+- RAM: 512MB
+- Storage: 1GB SSD
+- Network: 100Mbps
+- OS: Ubuntu 18.04+
+
+#### Recommended Requirements
+- CPU: 2+ cores @ 3.0GHz+
+- RAM: 2GB+
+- Storage: 10GB+ SSD
+- Network: 1Gbps
+- OS: Ubuntu 20.04+ LTS
+
+### Performance Tips
+
+#### Database Optimization
+```python
+# Use connection pooling
+client = AsyncIOMotorClient(MONGO_URL, maxPoolSize=10)
+
+# Index important fields
+db.userbots.create_index("user_id")
+db.userbots.create_index("created_at")
+
+# Use aggregation pipelines for complex queries
+```
+
+#### Memory Management
+```python
+# Clear cache periodically
+@ubot.on_message(filters.command("clear_cache"))
+async def clear_cache(client, message):
+    # Clear various caches
+    pass
+```
+
+#### Rate Limiting
+```python
+# Implement rate limiting
+from pyrogram.errors import FloodWait
+import asyncio
+
+async def safe_request(func, *args, **kwargs):
+    try:
+        return await func(*args, **kwargs)
+    except FloodWait as e:
+        await asyncio.sleep(e.value)
+        return await func(*args, **kwargs)
+```
+
+### Monitoring & Metrics
+
+#### Health Checks
+```bash
+# Check bot health
+curl http://localhost:8000/health
+
+# Monitor resource usage
+htop
+iotop
+nload
+```
+
+#### Logging Configuration
+```python
+# Advanced logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    handlers=[
+        logging.FileHandler('logs.txt'),
+        logging.StreamHandler()
+    ]
+)
+```
+
+---
+
+## Security Best Practices
+
+### API Security
+- Jangan commit API keys ke repository
+- Gunakan environment variables
+- Rotate keys secara berkala
+- Monitor API usage
+
+### User Data Protection
+- Encrypt sensitive data di database
+- Implement proper access controls
+- Regular security audits
+- GDPR compliance untuk data user
+
+### Bot Security
+- Validate semua input user
+- Rate limiting pada commands
+- Anti-spam protection
+- Session management yang aman
+
+### Hosting Security
+- Gunakan firewall (ufw/iptables)
+- Keep system updated
+- Use SSL/TLS certificates
+- Regular backups
+
+---
+
+## Troubleshooting Advanced
+
+### Common Error Codes
+
+#### Telegram API Errors
+- `400 BAD_REQUEST`: Invalid parameter
+- `401 UNAUTHORIZED`: Invalid token
+- `403 FORBIDDEN`: Bot tidak memiliki akses
+- `404 NOT_FOUND`: Chat/user tidak ditemukan
+- `420 FLOOD`: Rate limit exceeded
+- `500 INTERNAL`: Server error Telegram
+
+#### Database Errors
+- `ConnectionTimeout`: Database unreachable
+- `AuthenticationFailed`: Invalid credentials
+- `DuplicateKeyError`: Data sudah ada
+- `ValidationError`: Invalid data format
+
+#### System Errors
+- `MemoryError`: Out of memory
+- `TimeoutError`: Operation timeout
+- `OSError`: System resource error
+- `ImportError`: Missing dependencies
+
+### Debug Commands
+
+```bash
+# Check system status
+python3 -c "import PyroUbot; print('Import OK')"
+
+# Test database connection
+python3 -c "from PyroUbot.core.database import client; print('DB OK')"
+
+# Test bot token
+python3 -c "from PyroUbot.config import BOT_TOKEN; print('Token OK')"
+
+# Check all dependencies
+python3 -c "import pyrogram, pytgcalls, motor; print('Deps OK')"
+```
+
+### Recovery Procedures
+
+#### Bot Crash Recovery
+1. Check logs untuk error details
+2. Restart bot dengan `python3 -m PyroUbot`
+3. Verify database integrity
+4. Check system resources
+
+#### Data Loss Recovery
+1. Restore dari backup terakhir
+2. Recreate missing userbots
+3. Verify configuration files
+4. Test functionality
+
+#### Performance Issues
+1. Monitor system resources
+2. Check database performance
+3. Optimize queries
+4. Scale up if necessary
+
+---
+
+## Project Statistics
+
+### GitHub Stats
+[![GitHub stars](https://img.shields.io/github/stars/IbraDecode/PyroUbot?style=flat-square)](https://github.com/IbraDecode/PyroUbot/stargazers)
+[![GitHub forks](https://img.shields.io/github/forks/IbraDecode/PyroUbot?style=flat-square)](https://github.com/IbraDecode/PyroUbot/network)
+[![GitHub issues](https://img.shields.io/github/issues/IbraDecode/PyroUbot?style=flat-square)](https://github.com/IbraDecode/PyroUbot/issues)
+[![GitHub pull requests](https://img.shields.io/github/issues-pr/IbraDecode/PyroUbot?style=flat-square)](https://github.com/IbraDecode/PyroUbot/pulls)
+
+### Activity
+[![GitHub last commit](https://img.shields.io/github/last-commit/IbraDecode/PyroUbot?style=flat-square)](https://github.com/IbraDecode/PyroUbot/commits)
+[![GitHub commit activity](https://img.shields.io/github/commit-activity/m/IbraDecode/PyroUbot?style=flat-square)](https://github.com/IbraDecode/PyroUbot/commits)
+[![Contributors](https://img.shields.io/github/contributors/IbraDecode/PyroUbot?style=flat-square)](https://github.com/IbraDecode/PyroUbot/graphs/contributors)
+
+### Code Quality
+[![Code size](https://img.shields.io/github/languages/code-size/IbraDecode/PyroUbot?style=flat-square)](https://github.com/IbraDecode/PyroUbot)
+[![Repository size](https://img.shields.io/github/repo-size/IbraDecode/PyroUbot?style=flat-square)](https://github.com/IbraDecode/PyroUbot)
+[![Lines of code](https://img.shields.io/tokei/lines/github/IbraDecode/PyroUbot?style=flat-square)](https://github.com/IbraDecode/PyroUbot)
+
+### Community
+- **Telegram Group**: 500+ members
+- **GitHub Stars**: Growing community
+- **Contributors**: Active development team
+- **Users**: Thousands of active installations
+
+### Technology Stack
+- **Primary Language**: Python 97.8%
+- **Framework**: Pyrogram, PyTgCalls
+- **Database**: MongoDB
+- **Deployment**: Docker, VPS, Cloud
+
+---
+
+## Community & Ecosystem
+
+### Official Channels
+- **Telegram Group**: [PyroUbot Community](https://t.me/pyroubot_grup)
+- **GitHub**: [Repository](https://github.com/IbraDecode/PyroUbot)
+- **Website**: Coming soon
+- **Documentation**: This README
+
+### Related Projects
+- **Pyrogram**: Core Telegram library
+- **PyTgCalls**: Voice/video calls
+- **MongoDB**: Database solution
+- **TgCrypto**: Encryption library
+
+### Learning Resources
+- **Pyrogram Documentation**: [pyrogram.org](https://docs.pyrogram.org)
+- **Telegram Bot API**: [core.telegram.org](https://core.telegram.org/bots/api)
+- **Python Asyncio**: [docs.python.org](https://docs.python.org/3/library/asyncio.html)
+- **MongoDB Manual**: [docs.mongodb.com](https://docs.mongodb.com)
+
+### Community Projects
+- Custom plugins dan modules
+- Deployment scripts
+- Docker configurations
+- Alternative frontends
 
 ---
 
