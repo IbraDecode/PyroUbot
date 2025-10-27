@@ -499,3 +499,77 @@ async def _(client, callback_query):
             BTN.UBOT(ubot._ubot[count].me.id, count)
         ),
     )
+
+
+@PY.CALLBACK("trial_ubot")
+async def _(client, callback_query):
+    user_id = callback_query.from_user.id
+    user_name = callback_query.from_user.first_name
+
+    # Check if user already has trial
+    trial_data = await get_list_from_vars(client.me.id, "TRIAL_USERS")
+    if user_id in trial_data:
+        return await callback_query.answer("❌ Anda sudah menggunakan trial sebelumnya!", True)
+
+    # Check if max trial users reached
+    max_trial = 50  # Maximum trial users
+    if len(trial_data) >= max_trial:
+        return await callback_query.answer("❌ Trial penuh, coba lagi nanti!", True)
+
+    # Create trial userbot
+    try:
+        buttons = [
+            [InlineKeyboardButton("📱 Masukkan Nomor", callback_data=f"start_trial {user_id}")],
+            [InlineKeyboardButton("❌ Batal", callback_data="home")]
+        ]
+
+        await callback_query.edit_message_text(
+            f"""
+<b>🎁 TRIAL USERBOT GRATIS</b>
+
+<b>👤 User:</b> {user_name}
+<b>⏰ Durasi:</b> 1 Hari
+<b>⚡ Limit:</b> 100 perintah/hari
+
+<b>📋 Cara menggunakan:</b>
+1. Klik tombol "Masukkan Nomor"
+2. Masukkan nomor telepon Anda
+3. Masukkan kode verifikasi dari Telegram
+4. Userbot trial siap digunakan!
+
+<b>⚠️ Catatan:</b>
+• Trial hanya bisa digunakan 1x per user
+• Userbot akan otomatis terhapus setelah 1 hari
+• Beberapa fitur mungkin dibatasi
+
+<b>🚀 Siap memulai trial?</b>
+""",
+            reply_markup=InlineKeyboardMarkup(buttons),
+            disable_web_page_preview=True
+        )
+
+    except Exception as e:
+        await callback_query.answer(f"❌ Error: {str(e)}", True)
+
+
+@PY.CALLBACK("start_trial")
+async def _(client, callback_query):
+    user_id = int(callback_query.data.split()[1])
+
+    if callback_query.from_user.id != user_id:
+        return await callback_query.answer("❌ Tombol ini bukan untuk Anda!", True)
+
+    # Start trial userbot creation process
+    await callback_query.edit_message_text(
+        "<b>📱 TRIAL USERBOT</b>\n\n"
+        "Kirim nomor telepon Anda dengan format:\n"
+        "<code>+628xxxxxxxxx</code>\n\n"
+        "Pastikan nomor aktif dan bisa menerima SMS!",
+        reply_markup=InlineKeyboardMarkup([
+            [InlineKeyboardButton("❌ Batal", callback_data="home")]
+        ])
+    )
+
+    # Set user state for trial
+    await add_to_vars(client.me.id, "TRIAL_USERS", user_id)
+    await set_vars(client.me.id, "TRIAL_STATE", f"waiting_phone_{user_id}")
